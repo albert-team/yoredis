@@ -2,6 +2,9 @@ const RedisParser = require('redis-parser')
 const Net = require('net')
 const URL = require('url')
 
+const Operation = require('./operations/operation')
+const PipelineOperation = require('./operations/pipeline-operation')
+
 class YoRedis {
   constructor(config) {
     if (config instanceof Function) this.config = config
@@ -75,47 +78,6 @@ class YoRedis {
       this.socket.end()
       this.socket = null
     }
-  }
-}
-
-class Operation {
-  constructor(resolve, reject) {
-    this.resolve = resolve
-    this.reject = reject
-  }
-
-  addReply(reply) {
-    this.resolve(reply)
-    return true
-  }
-
-  addError(error) {
-    this.reject(error)
-    return true
-  }
-}
-
-class PipelineOperation {
-  constructor(resolve, reject, size) {
-    this.resolve = resolve
-    this.reject = reject
-    this.size = size
-    this.replies = []
-  }
-
-  addReply(reply) {
-    this.replies.push(reply)
-    if (this.replies.length === this.size) {
-      if (this.error) this.reject(this.error)
-      else this.resolve(this.replies)
-      return true
-    }
-  }
-
-  addError(error) {
-    if (!this.error) this.error = error
-    this.replies.push(error)
-    if (this.replies.length === this.size) this.reject(this.error)
   }
 }
 
