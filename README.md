@@ -9,4 +9,51 @@
 
 ## Credits
 
-Red is a fork of [djanowski/yoredis](https://github.com/albert-team/red). Many thanks to Damian Janowski and his great work.
+Red is a fork of [djanowski/yoredis](https://github.com/djanowski/yoredis). Many thanks to Damian Janowski and his great work.
+
+## Installation
+
+### Requirements
+
+- Node.js >= 6.0.0
+- Redis
+
+### Instructions
+
+- With npm:
+
+```bash
+npm i @albert-team/red
+```
+
+- With yarn:
+
+```bash
+yarn add @albert-team/red
+```
+
+## Usage
+
+```js
+const Red = require('@albert-team/red')
+
+const main = async () => {
+  const client = new Red()
+  client.connect()
+
+  console.log(await client.call('ping'))
+  const result = await client.callMany([
+    ['set', 'testkey', 'testvalue'],
+    ['get', 'testkey']
+  ])
+  console.log(result)
+
+  client.disconnect()
+}
+
+main()
+```
+
+## Changelog
+
+Read more [here](https://github.com/albert-team/red/blob/master/CHANGELOG.md).

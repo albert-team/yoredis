@@ -4,7 +4,7 @@
   "license": "MIT",
   "author": "Albert Team",
   "repository": "github:albert-team/red",
-  "version": "0.1.0-beta.0",
+  "version": "0.1.0",
   "main": "src/index.js",
   "files": [
     "src"
