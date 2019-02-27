@@ -14,14 +14,16 @@ class RedisClient {
     this.parser = new RedisParser({
       returnReply: (res) => {
         const operation = this.operations[0]
-        const completed = operation.addResponse(res)
-        if (completed) this.operations.shift()
+        operation.addResponse(res)
+        if (operation.completed) this.operations.shift()
       },
       returnError: (err) => {
         const operation = this.operations[0]
-        const completed = operation.addError(err)
-        if (completed) this.operations.shift()
-      }
+        operation.addError(err)
+        if (operation.completed) this.operations.shift()
+      },
+      returnBuffers: false,
+      stringNumbers: false
     })
   }
 
@@ -47,7 +49,7 @@ class RedisClient {
   async call(...args) {
     return new Promise((resolve, reject) => {
       this.operations.push(new Operation(resolve, reject))
-      const buffer = createCommands([args])
+      const buffer = commandsToBuffer([args])
       this.socket.write(buffer)
     })
   }
@@ -57,7 +59,7 @@ class RedisClient {
       this.operations.push(
         new PipelineOperation(resolve, reject, commands.length)
       )
-      const buffer = createCommands(commands)
+      const buffer = commandsToBuffer(commands)
       this.socket.write(buffer)
     })
   }
@@ -67,21 +69,24 @@ const bufStar = Buffer.from('*', 'ascii')
 const bufDollar = Buffer.from('$', 'ascii')
 const bufCrlf = Buffer.from('\r\n', 'ascii')
 
-function createCommands(commands) {
-  const bufRespArrs = commands.map(toRESPArray)
-  return Buffer.concat([...bufRespArrs, bufCrlf])
+function commandsToBuffer(commands) {
+  return Buffer.concat([...commands.map(commandToBuffer), bufCrlf])
 }
 
-function toRESPArray(command) {
-  const bufRespStrs = command.map(toRESPString)
-  const bufStrCount = Buffer.from(String(bufRespStrs.length), 'ascii')
-  return Buffer.concat([bufStar, bufStrCount, bufCrlf, ...bufRespStrs])
+function commandToBuffer(command) {
+  const bufArgCount = Buffer.from(String(command.length), 'ascii')
+  return Buffer.concat([
+    bufStar,
+    bufArgCount,
+    bufCrlf,
+    ...command.map(argToBuffer)
+  ])
 }
 
-function toRESPString(str) {
-  const bufStr = Buffer.from(str, 'ascii')
-  const bufByteLength = Buffer.from(String(bufStr.length), 'ascii')
-  return Buffer.concat([bufDollar, bufByteLength, bufCrlf, bufStr, bufCrlf])
+function argToBuffer(arg) {
+  const bufArg = Buffer.from(arg, 'ascii')
+  const bufByteLength = Buffer.from(String(bufArg.length), 'ascii')
+  return Buffer.concat([bufDollar, bufByteLength, bufCrlf, bufArg, bufCrlf])
 }
 
 module.exports = RedisClient

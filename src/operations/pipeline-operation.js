@@ -10,17 +10,20 @@ class PipelineOperation extends Operation {
 
   addResponse(res) {
     this.responses.push(res)
-    if (this.responses.length >= this.size) {
+    if (this.responses.length === this.size) {
       if (this.error) this.reject(this.error)
       else this.resolve(this.responses)
-      return true
+      this.completed = true
     }
   }
 
   addError(err) {
-    if (!this.error) this.error = err
     this.responses.push(err)
-    if (this.responses.length >= this.size) this.reject(this.error)
+    if (!this.error) this.error = err
+    if (this.responses.length === this.size) {
+      this.reject(this.error)
+      this.completed = true
+    }
   }
 }
 

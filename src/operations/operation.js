@@ -2,16 +2,17 @@ class Operation {
   constructor(resolve, reject) {
     this.resolve = resolve
     this.reject = reject
+    this.completed = false
   }
 
   addResponse(res) {
     this.resolve(res)
-    return true
+    this.completed = true
   }
 
   addError(err) {
     this.reject(err)
-    return true
+    this.completed = true
   }
 }
 
