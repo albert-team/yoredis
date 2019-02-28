@@ -4,6 +4,7 @@ const waitUntil = require('node-wait-until')
 
 const Operation = require('./operations/operation')
 const PipelineOperation = require('./operations/pipeline-operation')
+const { commandsToBuffer } = require('./utils')
 
 class RedisClient {
   constructor(host = 'localhost', port = 6379) {
@@ -45,7 +46,7 @@ class RedisClient {
         const operation = this.operations.shift()
         operation.reject(err)
       })
-    await waitUntil(() => this.ready, 1000, 10)
+    return waitUntil(() => this.ready, 1000, 10)
   }
 
   async disconnect() {
@@ -57,7 +58,7 @@ class RedisClient {
         this.disconnected = true
         this.socket = null
       })
-    await waitUntil(() => this.disconnected, 1000, 10)
+    return waitUntil(() => this.disconnected, 1000, 10)
   }
 
   async call(...args) {
@@ -77,30 +78,6 @@ class RedisClient {
       this.socket.write(buffer)
     })
   }
-}
-
-const bufStar = Buffer.from('*', 'ascii')
-const bufDollar = Buffer.from('$', 'ascii')
-const bufCrlf = Buffer.from('\r\n', 'ascii')
-
-function commandsToBuffer(commands) {
-  return Buffer.concat([...commands.map(commandToBuffer), bufCrlf])
-}
-
-function commandToBuffer(command) {
-  const bufArgCount = Buffer.from(String(command.length), 'ascii')
-  return Buffer.concat([
-    bufStar,
-    bufArgCount,
-    bufCrlf,
-    ...command.map(argToBuffer)
-  ])
-}
-
-function argToBuffer(arg) {
-  const bufArg = Buffer.from(arg, 'ascii')
-  const bufByteLength = Buffer.from(String(bufArg.length), 'ascii')
-  return Buffer.concat([bufDollar, bufByteLength, bufCrlf, bufArg, bufCrlf])
 }
 
 module.exports = RedisClient
