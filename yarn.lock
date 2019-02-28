@@ -507,6 +507,11 @@ nice-try@^1.0.4:
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
 
+node-wait-until@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/node-wait-until/-/node-wait-until-1.0.0.tgz#226f469fbd1266ad99d5bcffac8e4f2a264767a5"
+  integrity sha512-mJlsHNDGNVRXWr1pFnXevwJ6AhAELdjvY0j5JI7hvxpcECUrNlo6b+Z3eLoOTkfp/MC8AwPL7tXkhquh/2np8A==
+
 once@^1.3.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"

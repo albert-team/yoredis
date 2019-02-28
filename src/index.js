@@ -1,5 +1,6 @@
 const net = require('net')
 const RedisParser = require('redis-parser')
+const waitUntil = require('node-wait-until')
 
 const Operation = require('./operations/operation')
 const PipelineOperation = require('./operations/pipeline-operation')
@@ -11,6 +12,8 @@ class RedisClient {
 
     this.operations = []
     this.socket = null
+    this.ready = false // client is ready if this.socket is ready
+    this.disconnected = true // client is disconnected if this.socket is fully closed
     this.parser = new RedisParser({
       returnReply: (res) => {
         const operation = this.operations[0]
@@ -27,10 +30,14 @@ class RedisClient {
     })
   }
 
-  connect() {
-    if (this.socket) return
+  async connect() {
+    if (this.ready) return
     this.socket = net.createConnection(this.port, this.host)
     this.socket
+      .once('ready', () => {
+        this.ready = true
+        this.disconnected = false
+      })
       .on('data', (data) => {
         this.parser.execute(data)
       })
@@ -38,12 +45,19 @@ class RedisClient {
         const operation = this.operations.shift()
         operation.reject(err)
       })
+    await waitUntil(() => this.ready, 1000, 10)
   }
 
-  disconnect() {
-    if (!this.socket) return
+  async disconnect() {
+    if (this.disconnected) return
     this.socket.end()
-    this.socket = null
+    this.socket
+      .once('end', () => (this.ready = false))
+      .once('close', () => {
+        this.disconnected = true
+        this.socket = null
+      })
+    await waitUntil(() => this.disconnected, 1000, 10)
   }
 
   async call(...args) {
