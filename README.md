@@ -15,7 +15,7 @@ Red is a fork of [djanowski/yoredis](https://github.com/djanowski/yoredis). Many
 
 ### Requirements
 
-- Node.js >= 6.0.0
+- Node.js >= 8.0.0
 - Redis
 
 ### Instructions
@@ -39,7 +39,7 @@ const Red = require('@albert-team/red')
 
 const main = async () => {
   const client = new Red()
-  client.connect()
+  await client.connect()
 
   console.log(await client.call('ping'))
   const result = await client.callMany([
@@ -48,7 +48,7 @@ const main = async () => {
   ])
   console.log(result)
 
-  client.disconnect()
+  await client.disconnect()
 }
 
 main()
