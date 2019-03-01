@@ -16,7 +16,7 @@ Red is a fork of [djanowski/yoredis](https://github.com/djanowski/yoredis). Many
 ### Requirements
 
 - Node.js >= 8.0.0
-- Redis
+- Redis (server)
 
 ### Instructions
 

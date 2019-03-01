@@ -8,12 +8,7 @@ function commandsToBuffer(commands) {
 
 function commandToBuffer(command) {
   const bufArgCount = Buffer.from(String(command.length), 'ascii')
-  return Buffer.concat([
-    bufStar,
-    bufArgCount,
-    bufCrlf,
-    ...command.map(argToBuffer)
-  ])
+  return Buffer.concat([bufStar, bufArgCount, bufCrlf, ...command.map(argToBuffer)])
 }
 
 function argToBuffer(arg) {

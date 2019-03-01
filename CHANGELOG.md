@@ -1,5 +1,10 @@
 # CHANGELOG
 
+# v0.3.0
+
+- NEW: Automatically convert command arguments to strings
+- CHANGED: Increase waiting timeout of connect() and disconnect() of RedisClient
+
 ## v0.2.0
 
 - NEW: Fully support Promise

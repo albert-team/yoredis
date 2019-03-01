@@ -4,7 +4,7 @@
   "license": "MIT",
   "author": "Albert Team",
   "repository": "github:albert-team/red",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "src/index.js",
   "files": [
     "src"
@@ -20,5 +20,10 @@
   "bugs": {
     "url": "https://github.com/albert-team/red/issues"
   },
-  "homepage": "https://github.com/albert-team/red#readme"
+  "homepage": "https://github.com/albert-team/red#readme",
+  "keywords": [
+    "minimal",
+    "redis",
+    "client"
+  ]
 }
