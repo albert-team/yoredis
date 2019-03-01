@@ -46,7 +46,7 @@ class RedisClient {
         const operation = this.operations.shift()
         operation.reject(err)
       })
-    return waitUntil(() => this.ready, 1000, 10)
+    return waitUntil(() => this.ready, 3000, 50)
   }
 
   async disconnect() {
@@ -58,7 +58,7 @@ class RedisClient {
         this.disconnected = true
         this.socket = null
       })
-    return waitUntil(() => this.disconnected, 1000, 10)
+    return waitUntil(() => this.disconnected, 3000, 50)
   }
 
   async call(...args) {
