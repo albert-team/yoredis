@@ -1,6 +1,6 @@
 {
   "name": "@albert-team/red",
-  "description": "Minimal Redis client for Node.js",
+  "description": "Minimalistic Redis client for Node.js",
   "license": "MIT",
   "author": "Albert Team",
   "repository": "github:albert-team/red",
@@ -23,6 +23,7 @@
   "homepage": "https://github.com/albert-team/red#readme",
   "keywords": [
     "minimal",
+    "minimalistic",
     "redis",
     "client"
   ]

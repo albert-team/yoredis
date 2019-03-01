@@ -5,7 +5,7 @@
 
 # RED
 
-> Minimal Redis client for Node.js
+> Minimalistic Redis client for Node.js
 
 ## Credits
 
