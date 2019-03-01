@@ -17,7 +17,7 @@ function commandToBuffer(command) {
 }
 
 function argToBuffer(arg) {
-  const bufArg = Buffer.from(arg, 'ascii')
+  const bufArg = Buffer.from(String(arg), 'ascii')
   const bufByteLength = Buffer.from(String(bufArg.length), 'ascii')
   return Buffer.concat([bufDollar, bufByteLength, bufCrlf, bufArg, bufCrlf])
 }
