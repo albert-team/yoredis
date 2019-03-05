@@ -2,19 +2,19 @@ const net = require('net')
 const RedisParser = require('redis-parser')
 const waitUntil = require('node-wait-until')
 
-const Operation = require('./operations/operation')
-const PipelineOperation = require('./operations/pipeline-operation')
+const { Operation, PipelineOperation } = require('./operations')
 const { commandsToBuffer } = require('./utils')
 
 class RedisClient {
-  constructor(host = 'localhost', port = 6379) {
+  constructor(host = 'localhost', port = 6379, options = {}) {
     this.host = host
     this.port = port
+    this.options = Object.assign({ timeout: 3000 }, options)
 
-    this.operations = []
-    this.socket = null
     this.ready = false // client is ready if this.socket is ready
     this.disconnected = true // client is disconnected if this.socket is fully closed
+    this.operations = []
+    this.socket = null
     this.parser = new RedisParser({
       returnReply: (res) => {
         const operation = this.operations[0]
@@ -39,26 +39,24 @@ class RedisClient {
         this.ready = true
         this.disconnected = false
       })
-      .on('data', (data) => {
-        this.parser.execute(data)
-      })
+      .on('data', (data) => this.parser.execute(data))
       .on('error', (err) => {
         const operation = this.operations.shift()
         operation.reject(err)
       })
-    return waitUntil(() => this.ready, 3000, 50)
+    return waitUntil(() => this.ready, this.options.timeout, 50)
   }
 
   async disconnect() {
     if (this.disconnected) return
-    this.socket.end()
     this.socket
       .once('end', () => (this.ready = false))
       .once('close', () => {
         this.disconnected = true
         this.socket = null
       })
-    return waitUntil(() => this.disconnected, 3000, 50)
+    this.socket.end()
+    return waitUntil(() => this.disconnected, this.options.timeout, 50)
   }
 
   async call(...args) {
