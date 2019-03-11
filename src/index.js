@@ -9,7 +9,10 @@ class RedisClient {
   constructor(host = 'localhost', port = 6379, options = {}) {
     this.host = host
     this.port = port
-    this.options = Object.assign({ timeout: 3000 }, options)
+    this.options = Object.assign(
+      { timeout: 3000, returnBuffers: false, stringNumbers: false },
+      options
+    )
 
     this.ready = false // client is ready if this.socket is ready
     this.disconnected = true // client is disconnected if this.socket is fully closed
@@ -26,8 +29,8 @@ class RedisClient {
         operation.addError(err)
         if (operation.completed) this.operations.shift()
       },
-      returnBuffers: false,
-      stringNumbers: false
+      returnBuffers: this.options.returnBuffers,
+      stringNumbers: this.options.stringNumbers
     })
   }
 
