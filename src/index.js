@@ -63,11 +63,7 @@ class RedisClient {
   }
 
   async call(...args) {
-    return new Promise((resolve, reject) => {
-      this.operations.push(new Operation(resolve, reject))
-      const buffer = commandsToBuffer([args])
-      this.socket.write(buffer)
-    })
+    return this.callOne(args)
   }
 
   async callOne(command) {
