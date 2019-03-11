@@ -42,6 +42,7 @@ const main = async () => {
   await client.connect()
 
   console.log(await client.call('ping'))
+  console.log(await client.callOne(['ping']))
   const result = await client.callMany([
     ['set', 'testkey', 'testvalue'],
     ['get', 'testkey']
