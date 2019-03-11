@@ -70,6 +70,14 @@ class RedisClient {
     })
   }
 
+  async callOne(command) {
+    return new Promise((resolve, reject) => {
+      this.operations.push(new Operation(resolve, reject))
+      const buffer = commandsToBuffer([command])
+      this.socket.write(buffer)
+    })
+  }
+
   async callMany(commands) {
     return new Promise((resolve, reject) => {
       this.operations.push(new PipelineOperation(resolve, reject, commands.length))
