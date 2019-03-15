@@ -10,7 +10,12 @@ class RedisClient {
     this.host = host
     this.port = port
     this.options = Object.assign(
-      { timeout: 3000, returnBuffers: false, stringNumbers: false },
+      {
+        password: null,
+        timeout: 3000,
+        returnBuffers: false,
+        stringNumbers: false
+      },
       options
     )
 
@@ -47,7 +52,8 @@ class RedisClient {
         const operation = this.operations.shift()
         operation.reject(err)
       })
-    return waitUntil(() => this.ready, this.options.timeout, 50)
+    await waitUntil(() => this.ready, this.options.timeout, 100)
+    await this.authenticate()
   }
 
   async disconnect() {
@@ -59,7 +65,12 @@ class RedisClient {
         this.socket = null
       })
     this.socket.end()
-    return waitUntil(() => this.disconnected, this.options.timeout, 50)
+    return waitUntil(() => this.disconnected, this.options.timeout, 100)
+  }
+
+  async authenticate() {
+    const { password } = this.options
+    if (password) return this.callOne(['AUTH', password])
   }
 
   async call(...args) {
