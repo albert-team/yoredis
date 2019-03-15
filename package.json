@@ -4,7 +4,7 @@
   "license": "MIT",
   "author": "Albert Team",
   "repository": "github:albert-team/red",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "main": "src/index.js",
   "files": [
     "src"
@@ -15,7 +15,7 @@
     "redis-parser": "^3.0.0"
   },
   "devDependencies": {
-    "eslint": "^5.15.1"
+    "eslint": "^5.15.2"
   },
   "bugs": {
     "url": "https://github.com/albert-team/red/issues"

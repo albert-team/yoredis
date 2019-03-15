@@ -1,7 +1,5 @@
 [![](https://img.shields.io/github/license/albert-team/red.svg?style=flat-square)](https://github.com/albert-team/red)
 [![](https://img.shields.io/npm/v/@albert-team/red/latest.svg?style=flat-square)](https://www.npmjs.com/package/@albert-team/red)
-[![](https://img.shields.io/npm/v/@albert-team/red/beta.svg?style=flat-square)](https://www.npmjs.com/package/@albert-team/red)
-[![](https://img.shields.io/npm/v/@albert-team/red/canary.svg?style=flat-square)](https://www.npmjs.com/package/@albert-team/red)
 
 # RED
 
@@ -16,7 +14,7 @@ Red is a fork of [djanowski/yoredis](https://github.com/djanowski/yoredis). Many
 ### Requirements
 
 - Node.js >= 8.0.0
-- Redis (server)
+- Redis
 
 ### Instructions
 
@@ -41,13 +39,13 @@ const main = async () => {
   const client = new Red()
   await client.connect()
 
-  console.log(await client.call('ping'))
-  console.log(await client.callOne(['ping']))
+  console.log(await client.call('ping')) // PONG
+  console.log(await client.callOne(['ping'])) // PONG
   const result = await client.callMany([
     ['set', 'testkey', 'testvalue'],
     ['get', 'testkey']
   ])
-  console.log(result)
+  console.log(result) // [ 'OK', 'testvalue' ]
 
   await client.disconnect()
 }

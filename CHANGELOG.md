@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.5.0
+
+- NEW: Support authentication
+
 ## v0.4.0
 
 - NEW: Add options parameter to `RedisClient`
