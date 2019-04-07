@@ -11,8 +11,10 @@
   ],
   "scripts": {},
   "dependencies": {
+    "better-docs": "^1.1.6",
     "node-wait-until": "^1.0.0",
-    "redis-parser": "^3.0.0"
+    "redis-parser": "^3.0.0",
+    "jsdoc": "^3.5.5"
   },
   "devDependencies": {
     "eslint": "^5.15.2"
