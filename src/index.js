@@ -5,10 +5,29 @@ const waitUntil = require('node-wait-until')
 const { Operation, PipelineOperation } = require('./operations')
 const { commandsToBuffer } = require('./utils')
 
+/**
+ * Redis client
+ * @public
+ * @param {string} host - Host name
+ * @param {number} port - Port number
+ * @param {Object} options - Options
+ */
 class RedisClient {
   constructor(host = 'localhost', port = 6379, options = {}) {
+    /**
+     * @private
+     * @type {string}
+     */
     this.host = host
+    /**
+     * @private
+     * @type {number}
+     */
     this.port = port
+    /**
+     * @private
+     * @type {Object}
+     */
     this.options = Object.assign(
       {
         password: null,
@@ -19,10 +38,30 @@ class RedisClient {
       options
     )
 
+    /**
+     * @private
+     * @type {boolean}
+     */
     this.ready = false // client is ready if this.socket is ready
+    /**
+     * @private
+     * @type {boolean}
+     */
     this.disconnected = true // client is disconnected if this.socket is fully closed
+    /**
+     * @private
+     * @type {Operation[]}
+     */
     this.operations = []
+    /**
+     * @private
+     * @type {net.Socket}
+     */
     this.socket = null
+    /**
+     * @private
+     * @type {RedisParser}
+     */
     this.parser = new RedisParser({
       returnReply: (res) => {
         const operation = this.operations[0]
@@ -39,6 +78,11 @@ class RedisClient {
     })
   }
 
+  /**
+   * Connect to database server
+   * @public
+   * @async
+   */
   async connect() {
     if (this.ready) return
     this.socket = net.createConnection(this.port, this.host)
@@ -56,6 +100,11 @@ class RedisClient {
     await this.authenticate()
   }
 
+  /**
+   * Disconnect from database server
+   * @public
+   * @async
+   */
   async disconnect() {
     if (this.disconnected) return
     this.socket
@@ -68,15 +117,32 @@ class RedisClient {
     return waitUntil(() => this.disconnected, this.options.timeout, 100)
   }
 
+  /**
+   * Authenticate
+   * @private
+   * @async
+   */
   async authenticate() {
     const { password } = this.options
     if (password) return this.callOne(['AUTH', password])
   }
 
+  /**
+   * Call once
+   * @public
+   * @async
+   * @param {...any} args - Arguments
+   */
   async call(...args) {
     return this.callOne(args)
   }
 
+  /**
+   * Call once
+   * @public
+   * @async
+   * @param {any[]} command - Command as an array of arguments
+   */
   async callOne(command) {
     return new Promise((resolve, reject) => {
       this.operations.push(new Operation(resolve, reject))
@@ -85,6 +151,10 @@ class RedisClient {
     })
   }
 
+  /**
+   * Call multiple times
+   * @param {Array<any[]>} commands - An array of commands
+   */
   async callMany(commands) {
     return new Promise((resolve, reject) => {
       this.operations.push(new PipelineOperation(resolve, reject, commands.length))
