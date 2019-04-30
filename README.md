@@ -32,26 +32,33 @@ yarn add @albert-team/red
 
 ## Usage
 
+### Quick Start
+
 ```js
 const Red = require('@albert-team/red')
 
 const main = async () => {
-  const client = new Red()
+  const client = new Redis()
+
+  console.log(client.ready) // false
   await client.connect()
+  console.log(client.ready) // true
 
-  console.log(await client.call('ping')) // PONG
-  console.log(await client.callOne(['ping'])) // PONG
-  const result = await client.callMany([
-    ['set', 'testkey', 'testvalue'],
-    ['get', 'testkey']
-  ])
-  console.log(result) // [ 'OK', 'testvalue' ]
+  console.log(await client.call('PING')) // PONG
+  console.log(await client.callOne(['GET', 'key1'])) // null
+  console.log(
+    await client.callMany([['SET', 'key1', 'val1'], ['GET', 'key1'], ['GET', 'key2']])
+  ) // [ 'OK', 'val1', null ]
 
-  client.disconnect()
+  console.log(client.disconnected) // false
+  await client.disconnect()
+  console.log(client.disconnected) // true
 }
 
 main()
 ```
+
+### API
 
 ## Changelog
 

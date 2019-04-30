@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v0.6.0
+
+- NEW: Allow users to manually call `RedisClient.authenticate(password)`
+- NEW: Start writing tests and documentation
+
 ## v0.5.0
 
 - NEW: Support authentication
