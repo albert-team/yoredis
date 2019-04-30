@@ -47,7 +47,7 @@ const main = async () => {
   ])
   console.log(result) // [ 'OK', 'testvalue' ]
 
-  await client.disconnect()
+  client.disconnect()
 }
 
 main()

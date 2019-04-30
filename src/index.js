@@ -85,6 +85,7 @@ class RedisClient {
    */
   async connect() {
     if (this.ready) return
+
     this.socket = net.createConnection(this.port, this.host)
     this.socket
       .once('ready', () => {
@@ -97,7 +98,9 @@ class RedisClient {
         operation.reject(err)
       })
     await waitUntil(() => this.ready, this.options.timeout, 100)
-    await this.authenticate()
+
+    const { password } = this.options
+    if (password) await this.authenticate(password)
   }
 
   /**
@@ -119,12 +122,12 @@ class RedisClient {
 
   /**
    * Authenticate
-   * @private
+   * @public
    * @async
+   * @param {string} password - Password
    */
-  async authenticate() {
-    const { password } = this.options
-    if (password) return this.callOne(['AUTH', password])
+  async authenticate(password) {
+    return this.callOne(['AUTH', password])
   }
 
   /**
