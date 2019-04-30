@@ -15,7 +15,7 @@
     "redis-parser": "^3.0.0"
   },
   "devDependencies": {
-    "eslint": "^5.15.2"
+    "eslint": "^5.16.0"
   },
   "bugs": {
     "url": "https://github.com/albert-team/red/issues"
