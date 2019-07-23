@@ -8,9 +8,9 @@ const { commandsToBuffer } = require('./utils')
 /**
  * Redis client
  * @public
- * @param {string} host - Host name
- * @param {number} port - Port number
- * @param {Object} options - Options
+ * @param {string} [host='localhost'] - Host name
+ * @param {number} [port=6379] - Port number
+ * @param {Object} [options={}] - Options
  */
 class RedisClient {
   constructor(host = 'localhost', port = 6379, options = {}) {
@@ -29,15 +29,9 @@ class RedisClient {
      * @type {Object}
      */
     this.options = Object.assign(
-      {
-        password: null,
-        timeout: 3000,
-        returnBuffers: false,
-        stringNumbers: false
-      },
+      { password: null, timeout: 3000, returnBuffers: false, stringNumbers: false },
       options
     )
-
     /**
      * @private
      * @type {boolean}
