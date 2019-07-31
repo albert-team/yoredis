@@ -125,7 +125,7 @@ class RedisClient {
   }
 
   /**
-   * Call once
+   * Call one command
    * @public
    * @async
    * @param {...any} args - Arguments
@@ -135,7 +135,7 @@ class RedisClient {
   }
 
   /**
-   * Call once
+   * Call one command
    * @public
    * @async
    * @param {any[]} command - Command as an array of arguments
@@ -149,7 +149,9 @@ class RedisClient {
   }
 
   /**
-   * Call multiple times
+   * Call many commands at once
+   * @public
+   * @async
    * @param {Array<any[]>} commands - An array of commands
    */
   async callMany(commands) {

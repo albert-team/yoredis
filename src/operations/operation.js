@@ -7,17 +7,17 @@
 class Operation {
   constructor(resolve, reject) {
     /**
-     * @private
+     * @public
      * @type {Function}
      */
     this.resolve = resolve
     /**
-     * @private
+     * @public
      * @type {Function}
      */
     this.reject = reject
     /**
-     * @private
+     * @public
      * @type {boolean}
      */
     this.completed = false

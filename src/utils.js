@@ -5,7 +5,7 @@ const bufCrlf = Buffer.from('\r\n', 'ascii')
 /**
  * Convert an array of commands to buffer
  * @param {Array<any[]>} commands - An array of commands
- * @returns {Buffer}
+ * @return {Buffer}
  */
 function commandsToBuffer(commands) {
   return Buffer.concat([...commands.map(commandToBuffer), bufCrlf])
@@ -14,7 +14,7 @@ function commandsToBuffer(commands) {
 /**
  * Convert a command - an array of arguments to buffer
  * @param {any[]} command - Command as an array of arguments
- * @returns {Buffer}
+ * @return {Buffer}
  */
 function commandToBuffer(command) {
   const bufArgCount = Buffer.from(String(command.length), 'ascii')
@@ -24,7 +24,7 @@ function commandToBuffer(command) {
 /**
  * Convert an argument to buffer
  * @param {an} arg - Argument
- * @returns {Buffer}
+ * @return {Buffer}
  */
 function argToBuffer(arg) {
   if (arg === null || arg === undefined) arg = ''
