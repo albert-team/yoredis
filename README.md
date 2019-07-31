@@ -1,5 +1,5 @@
 [![](https://img.shields.io/github/license/albert-team/red.svg?style=flat-square)](https://github.com/albert-team/red)
-[![](https://img.shields.io/npm/v/@albert-team/red/latest.svg?style=flat-square)](https://www.npmjs.com/package/@albert-team/red)
+[![](https://img.shields.io/npm/v/@albert-team/red.svg?style=flat-square)](https://www.npmjs.com/package/@albert-team/red)
 
 # RED
 
@@ -38,11 +38,14 @@ yarn add @albert-team/red
 const Red = require('@albert-team/red')
 
 const main = async () => {
-  const client = new Redis()
+  const client = new Red('127.0.0.1', 6379, { password: 'scrtpassword', timeout: 1000 })
 
   console.log(client.ready) // false
   await client.connect()
   console.log(client.ready) // true
+
+  // Instead of providing password to the constructor, you can
+  await client.authenticate('scrtpassword')
 
   console.log(await client.call('PING')) // PONG
   console.log(await client.callOne(['GET', 'key1'])) // null
