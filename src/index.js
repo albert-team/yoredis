@@ -82,6 +82,11 @@ class RedisClient {
 
     this.socket = net.createConnection(this.port, this.host)
     this.socket
+      .once('connect', () => {
+        // we may remove this listener once we drop support for Node < v9.11.0
+        this.ready = true
+        this.disconnected = false
+      })
       .once('ready', () => {
         this.ready = true
         this.disconnected = false
