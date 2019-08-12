@@ -38,14 +38,11 @@ yarn add @albert-team/red
 const Red = require('@albert-team/red')
 
 const main = async () => {
-  const client = new Red('127.0.0.1', 6379, { password: 'scrtpassword', timeout: 1000 })
+  const client = new Red('127.0.0.1', 6379, { timeout: 10000 })
 
   console.log(client.ready) // false
   await client.connect()
   console.log(client.ready) // true
-
-  // Instead of providing password to the constructor, you can
-  await client.authenticate('scrtpassword')
 
   console.log(await client.call('PING')) // PONG
   console.log(await client.callOne(['GET', 'key1'])) // null
@@ -61,7 +58,19 @@ const main = async () => {
 main()
 ```
 
-### API
+### Authentication
+
+You can either pass the password to the constructor
+
+```js
+const client = new Red('127.0.0.1', 6379, { password: 'scrtpassword' })
+```
+
+or call this method manually
+
+```js
+client.authenticate('scrtpassword')
+```
 
 ## Changelog
 

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.7.1
+
+### PATCHES
+
+- Fix compatibility with Node < v9.11.0
+
 ## v0.7.0
 
 ### FEATURES
