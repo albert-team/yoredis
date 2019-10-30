@@ -38,7 +38,7 @@ yarn add @albert-team/red
 const Red = require('@albert-team/red')
 
 const main = async () => {
-  const client = new Red('127.0.0.1', 6379, { timeout: 10000 })
+  const client = new Red('127.0.0.1', 6379)
 
   console.log(client.ready) // false
   await client.connect()
