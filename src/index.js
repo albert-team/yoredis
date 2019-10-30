@@ -1,6 +1,5 @@
-const net = require('net')
+const { Socket } = require('net')
 const RedisParser = require('redis-parser')
-const waitUntil = require('node-wait-until')
 
 const { Operation, PipelineOperation } = require('./operations')
 const { commandsToBuffer } = require('./utils')
@@ -29,7 +28,7 @@ class RedisClient {
      * @type {Object}
      */
     this.options = Object.assign(
-      { password: null, timeout: 3000, returnBuffers: false, stringNumbers: false },
+      { password: null, returnBuffers: false, stringNumbers: false },
       options
     )
     /**
@@ -49,9 +48,9 @@ class RedisClient {
     this.operations = []
     /**
      * @private
-     * @type {net.Socket}
+     * @type {Socket}
      */
-    this.socket = null
+    this.socket = new Socket()
     /**
      * @private
      * @type {RedisParser}
@@ -80,23 +79,24 @@ class RedisClient {
   async connect() {
     if (this.ready) return
 
-    this.socket = net.createConnection(this.port, this.host)
+    await new Promise((resolve, reject) => {
+      this.socket.connect({ host: this.host, port: this.port })
+      this.socket
+        .once('connect', () => {
+          // we may replace this event with 'ready' once we drop support for Node < v9.11.0
+          this.ready = true
+          this.disconnected = false
+          resolve()
+        })
+        .once('error', (err) => reject(err))
+    })
+
     this.socket
-      .once('connect', () => {
-        // we may remove this listener once we drop support for Node < v9.11.0
-        this.ready = true
-        this.disconnected = false
-      })
-      .once('ready', () => {
-        this.ready = true
-        this.disconnected = false
-      })
       .on('data', (data) => this.parser.execute(data))
       .on('error', (err) => {
         const operation = this.operations.shift()
         operation.reject(err)
       })
-    await waitUntil(() => this.ready, this.options.timeout, 100)
 
     const { password } = this.options
     if (password) await this.authenticate(password)
@@ -109,14 +109,19 @@ class RedisClient {
    */
   async disconnect() {
     if (this.disconnected) return
-    this.socket
-      .once('end', () => (this.ready = false))
-      .once('close', () => {
-        this.disconnected = true
-        this.socket = null
-      })
-    this.socket.end()
-    return waitUntil(() => this.disconnected, this.options.timeout, 100)
+
+    return new Promise((resolve, reject) => {
+      this.socket.end()
+      this.socket
+        .once('end', () => {
+          this.ready = false
+        })
+        .once('close', () => {
+          this.disconnected = true
+          resolve()
+        })
+        .once('error', (err) => reject(err))
+    })
   }
 
   /**
