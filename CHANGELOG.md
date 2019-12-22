@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.8.0
+
+### FEATURES
+
+- Remove `node-wait-until` dependency. Remove `timeout` option
+
 ## v0.7.1
 
 ### PATCHES
