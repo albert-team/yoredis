@@ -4,7 +4,8 @@
 
 ### FEATURES
 
-- Remove `node-wait-until` dependency. Remove `timeout` option
+- Remove `node-wait-until` dependency
+- Remove `timeout` option
 
 ## v0.7.1
 
