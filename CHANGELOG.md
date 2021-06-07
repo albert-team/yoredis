@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.9.0
+
+### FEATURES
+
+- Drop Node.js 8 support
+
 ## v0.8.0
 
 ### FEATURES

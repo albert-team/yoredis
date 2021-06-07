@@ -67,7 +67,7 @@ class RedisClient {
         if (operation.completed) this.operations.shift()
       },
       returnBuffers: this.options.returnBuffers,
-      stringNumbers: this.options.stringNumbers
+      stringNumbers: this.options.stringNumbers,
     })
   }
 
@@ -82,8 +82,7 @@ class RedisClient {
     await new Promise((resolve, reject) => {
       this.socket.connect({ host: this.host, port: this.port })
       this.socket
-        .once('connect', () => {
-          // we may replace this event with 'ready' once we drop support for Node < v9.11.0
+        .once('ready', () => {
           this.ready = true
           this.disconnected = false
           resolve()
